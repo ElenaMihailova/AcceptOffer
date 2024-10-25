@@ -20,8 +20,8 @@ export const ConfirmPageView: React.FC<ConfirmPageViewProps> = ({ isAgreementChe
           control={<Checkbox checked={isAgreementChecked} onChange={onAgreementChange} />}
           label={
             <Typography sx={{ color: 'primary.main' }}>
-              С <Link href="/agreement.pdf" target="_blank" rel="noopener" underline="hover" sx={{ color: 'primary.main' }}>
-                договором ознакомлен
+              <Link href="/agreement.pdf" target="_blank" rel="noopener" underline="hover" sx={{ color: 'primary.main' }}>
+              С договором ознакомлен
               </Link>
             </Typography>
           }
