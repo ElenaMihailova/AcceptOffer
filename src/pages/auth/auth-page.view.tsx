@@ -1,13 +1,14 @@
-import internal from 'stream';
+import React from 'react';
+import { Container, useTheme } from '@mui/material';
 import { AuthForm } from '../../components/auth-form';
 import { PageWrapper } from '../../components/page-wrapper';
-import { Container, useTheme } from '@mui/material';
 
 interface AuthPageProps {
   handleSubmit: (login: string, password: string) => void;
+  errorMessage: string;
 }
 
-const AuthPageView: React.FC<AuthPageProps> = ({ handleSubmit }) => {
+const AuthPageView: React.FC<AuthPageProps> = ({ handleSubmit, errorMessage }) => {
   const theme = useTheme();
 
   return (
@@ -26,8 +27,7 @@ const AuthPageView: React.FC<AuthPageProps> = ({ handleSubmit }) => {
           maxWidth: theme.breakpoints.values.md,
         }}
       >
-        <AuthForm handleSubmit={handleSubmit} />
-
+        <AuthForm handleSubmit={handleSubmit} errorMessage={errorMessage} />
       </Container>
     </PageWrapper>
   );

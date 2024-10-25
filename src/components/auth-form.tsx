@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 
 interface AuthFormProps {
     handleSubmit: (login: string, password: string) => void;
+    errorMessage?: string;
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ handleSubmit }) => {
+export const AuthForm: React.FC<AuthFormProps> = ({ handleSubmit, errorMessage }) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
     const onSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        handleSubmit(login, password); 
+        handleSubmit(login, password);
     };
 
     return (
@@ -29,9 +30,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({ handleSubmit }) => {
                 borderRadius: 2,
             }}
         >
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ color: 'primary.main' }}>
                 Авторизация
             </Typography>
+            {errorMessage && (
+                <Alert severity="error" sx={{ width: '100%', marginBottom: 2 }}>
+                    {errorMessage}
+                </Alert>
+            )}
             <TextField
                 label="Логин"
                 variant="outlined"
