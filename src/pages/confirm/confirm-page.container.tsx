@@ -15,9 +15,10 @@ export const ConfirmPage: React.FC = () => {
   const link = useSelector((state: RootState) => state.link.link);
 
   useEffect(() => {
+    console.log('Location search:', location.search);
     const searchParams = new URLSearchParams(location.search);
     const initialLink = searchParams.get('initialLink');
-    console.log('Extracted initialLink:', initialLink); // Логирование для отладки
+    console.log('Extracted initialLink:', initialLink);
   
     if (initialLink) {
       dispatch(setLink(initialLink));
