@@ -6,6 +6,11 @@ import { Button } from '@mui/material';
 import { RootState } from '../../state/store';
 import { setLink } from '../../state/link-slice';
 
+// todo
+const fetchDefaultLink = async (): Promise<string> => {
+  return Promise.resolve("http://localhost:3000/default-link");
+};
+
 export const ConfirmPage: React.FC = () => {
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
   const navigate = useNavigate();
@@ -15,18 +20,25 @@ export const ConfirmPage: React.FC = () => {
   const link = useSelector((state: RootState) => state.link.link);
 
   useEffect(() => {
-    console.log('Location search:', location.search);
     const searchParams = new URLSearchParams(location.search);
-    const initialLink = searchParams.get('initialLink');
-    console.log('Extracted initialLink:', initialLink);
-  
+    let initialLink = searchParams.get('initialLink');
+
     if (initialLink) {
+      console.log('Извлеченный initialLink из URL:', initialLink);
       dispatch(setLink(initialLink));
-    } else {
-      console.error('initialLink отсутствует в URL');
+    } else if (!link) {
+
+      fetchDefaultLink()
+        .then((defaultLink) => {
+          console.log('Загруженный initialLink из API:', defaultLink);
+          dispatch(setLink(defaultLink));
+        })
+        .catch((error) => {
+          console.error('Ошибка при загрузке initialLink:', error);
+          navigate('/error'); 
+        });
     }
-  }, [location.search, dispatch]);  
-  
+  }, [location.search, dispatch, navigate, link]);
 
   const handleAgreementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsAgreementChecked(event.target.checked);

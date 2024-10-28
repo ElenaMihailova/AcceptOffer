@@ -32,6 +32,7 @@ export const ConfirmPageView: React.FC<ConfirmPageViewProps> = ({ isAgreementChe
           color="primary"
           onClick={onContinue}
           disabled={!isAgreementChecked}
+          type="button"
         >
           Продолжить
         </Button>
