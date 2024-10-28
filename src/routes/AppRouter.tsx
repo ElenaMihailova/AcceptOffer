@@ -9,6 +9,7 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<ConfirmPage />} />
+      <Route path="/default-link" element={<ConfirmPage />} />
       <Route path="/admin" element={<AuthPage />} />
       <Route path="/link-generation" element={<LinkGenerationPage />} />
       <Route path="/start" element={<WelcomePage />} />
