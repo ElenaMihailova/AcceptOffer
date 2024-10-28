@@ -1,46 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { ConfirmPageView } from './confirm-page.view';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
+import { RootState } from '../../state/store';
+import { setLink } from '../../state/link-slice';
 
 export const ConfirmPage: React.FC = () => {
-	const [isAgreementChecked, setIsAgreementChecked] = useState(false);
-	const navigate = useNavigate();
+  const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-	const handleAgreementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setIsAgreementChecked(event.target.checked);
-	};
+  const dispatch = useDispatch();
+  const link = useSelector((state: RootState) => state.link.link);
 
-	const handleContinue = () => {
-		console.log('Пользователь продолжил с подтвержденным договором');
-	};
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const initialLink = searchParams.get('initialLink');
+    console.log('Extracted initialLink:', initialLink);
+    if (initialLink) {
+      dispatch(setLink(initialLink));
+    }
+  }, [location.search, dispatch]);
+  
 
-	const handleAdminNavigate = () => {
-		navigate('/admin');
-	};
+  const handleAgreementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsAgreementChecked(event.target.checked);
+  };
 
-	return (
-		<>
-			<Button
-				variant="outlined"
-				color="secondary"
-				onClick={handleAdminNavigate}
-				sx={{
-					position: 'fixed',
-					top: 16,
-					right: 16,
-					zIndex: 1000,
-				}}
-			>
-				Временный переход на админскую страницу
-			</Button>
-			<ConfirmPageView
-				isAgreementChecked={isAgreementChecked}
-				onAgreementChange={handleAgreementChange}
-				onContinue={handleContinue}
-			/>
+  const handleContinue = () => {
+    if (link) {
+      console.log('Пользователь продолжил с подтвержденным договором');
+      window.location.href = link;
+    } else {
+      console.error('Ссылка не установлена');
+    }
+  };
 
-		</>
-	)
+  const handleAdminNavigate = () => {
+    navigate('/admin');
+  };
 
+  return (
+    <>
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={handleAdminNavigate}
+        sx={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          zIndex: 1000,
+        }}
+      >
+        Временный переход на админскую страницу
+      </Button>
+      <ConfirmPageView
+        isAgreementChecked={isAgreementChecked}
+        onAgreementChange={handleAgreementChange}
+        onContinue={handleContinue}
+      />
+    </>
+  );
 };
