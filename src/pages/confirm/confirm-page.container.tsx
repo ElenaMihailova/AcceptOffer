@@ -1,55 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { ConfirmPageView } from './confirm-page.view';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { RootState } from '../../state/store';
-import { setLink } from '../../state/link-slice';
-
-// todo
-const fetchDefaultLink = async (): Promise<string> => {
-  return Promise.resolve("http://localhost:3000/default-link");
-};
 
 export const ConfirmPage: React.FC = () => {
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+  const [originalLink, setOriginalLink] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
-  const dispatch = useDispatch();
-  const link = useSelector((state: RootState) => state.link.link);
-
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    let initialLink = searchParams.get('initialLink');
+    // const urlParams = new URLSearchParams(location.search);
+    const urlParams = new URLSearchParams('?ref=OVVGSk8=');
+    const encodedRef = urlParams.get('ref');
 
-    if (initialLink) {
-      console.log('Извлеченный initialLink из URL:', initialLink);
-      dispatch(setLink(initialLink));
-    } else if (!link) {
-
-      fetchDefaultLink()
-        .then((defaultLink) => {
-          console.log('Загруженный initialLink из API:', defaultLink);
-          dispatch(setLink(defaultLink));
-        })
-        .catch((error) => {
-          console.error('Ошибка при загрузке initialLink:', error);
-          navigate('/error'); 
-        });
+    if (encodedRef) {
+      try {
+        const decodedLinkId = atob(encodedRef);
+        const fullLink = `https://yclients.com/pay/${decodedLinkId}`;
+        setOriginalLink(fullLink);
+        console.log('Decoded Full Link:', fullLink);
+      } catch (error) {
+        console.error('Error decoding link ID:', error);
+      }
     }
-  }, [location.search, dispatch, navigate, link]);
+  }, [location]);
 
   const handleAgreementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsAgreementChecked(event.target.checked);
   };
 
   const handleContinue = () => {
-    if (link) {
-      console.log('Пользователь продолжил с подтвержденным договором');
-      window.location.href = link;
-    } else {
-      console.error('Ссылка не установлена');
+    if (originalLink) {
+      console.log('Redirecting to:', originalLink);
+      window.location.href = originalLink;
     }
   };
 

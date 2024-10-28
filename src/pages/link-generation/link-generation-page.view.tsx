@@ -11,7 +11,9 @@ interface LinkGenerationViewProps {
   handleCopy: () => void;
 }
 
-export const LinkGenerationView: React.FC<LinkGenerationViewProps> = ({ link, newLink, setLink, handleGenerate, handleCopy }) => {
+// https://yclients.com/pay/9UFJO/ 
+
+const LinkGenerationView: React.FC<LinkGenerationViewProps> = ({ link, newLink, setLink, handleGenerate, handleCopy }) => {
   return (
     <PageWrapper>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, maxWidth: 400, margin: '0 auto' }}>
@@ -20,8 +22,12 @@ export const LinkGenerationView: React.FC<LinkGenerationViewProps> = ({ link, ne
           variant="outlined"
           fullWidth
           value={link}
-          onChange={(e) => setLink(e.target.value)}
+          onChange={(e) => {
+            const newLink = e.target.value;
+            setLink(newLink);
+          }}
         />
+
         <Button variant="contained" color="primary" onClick={handleGenerate}>
           Сгенерировать
         </Button>
@@ -46,4 +52,5 @@ export const LinkGenerationView: React.FC<LinkGenerationViewProps> = ({ link, ne
       </Box>
     </PageWrapper>
   );
-};
+}; export default LinkGenerationView;
+
