@@ -17,11 +17,14 @@ export const ConfirmPage: React.FC = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const initialLink = searchParams.get('initialLink');
-    console.log('Extracted initialLink:', initialLink);
+    console.log('Extracted initialLink:', initialLink); // Логирование для отладки
+  
     if (initialLink) {
       dispatch(setLink(initialLink));
+    } else {
+      console.error('initialLink отсутствует в URL');
     }
-  }, [location.search, dispatch]);
+  }, [location.search, dispatch]);  
   
 
   const handleAgreementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
